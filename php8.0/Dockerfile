@@ -7,7 +7,7 @@ RUN apt-get update  \
         && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
         && ls -l /etc/apt/* \
         && apt-get update  \
-        && apt-get install -y -qq --no-install-recommends git openssh-client apt-transport-https lsb-release ca-certificates groff jq curl build-essential nodejs software-properties-common php8.0-intl php8.0-gd git php8.0-cli php8.0-curl php8.0-pgsql php8.0-ldap php8.0-sqlite3 php8.0-mysql php8.0-zip php8.0-xml php8.0-mbstring php8.0-dev make libmagickcore-6.q16-2-extra unzip php8.0-redis php8.0-imagick php8.0-dev php8.0-bcmath php8.0-mongodb libsystemd-dev python python-pip python-dev python3 python3-pip python3-dev libpng-dev python-setuptools python3-setuptools  \
+        && apt-get install -y -qq --no-install-recommends git openssh-client apt-transport-https lsb-release ca-certificates groff jq curl build-essential nodejs software-properties-common php8.0-intl php8.0-gd git php8.0-cli php8.0-curl php8.0-pgsql php8.0-ldap php8.0-sqlite3 php8.0-mysql php8.0-zip php8.0-xml php8.0-mbstring php8.0-dev php8.0-gd php8.0-exif php8.0-swoole php8.0-pcntl php8.0-json php8.0-readline php8.0-sqlite3 make libmagickcore-6.q16-2-extra unzip php8.0-redis php8.0-imagick php8.0-dev php8.0-bcmath php8.0-mongodb libsystemd-dev python python-pip python-dev python3 python3-pip python3-dev libpng-dev python-setuptools python3-setuptools  \
         && apt-get autoremove -y  \
         && apt-get autoclean  \
         && apt-get clean  \
@@ -15,6 +15,9 @@ RUN apt-get update  \
         && apt-get update  \
         && apt-get install -y nodejs  \
         && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
+RUN docker-php-ext-configure exif
+RUN docker-php-ext-install exif
+RUN docker-php-ext-enable exif
 RUN cd /tmp/  \
         && wget https://github.com/nikic/php-ast/archive/master.zip  \
         && unzip master.zip
@@ -35,7 +38,7 @@ RUN cd /tmp  \
         && make install  \
         && rm -rf /tmp/php-systemd-master  \
         && echo "extension=systemd.so" >> /etc/php/8.0/mods-available/systemd.ini
-RUN phpenmod zip intl gd systemd
+RUN phpenmod zip intl gd systemd exif
 RUN curl -O -L https://phar.phpunit.de/phpunit-9.5.4.phar  \
         && chmod +x phpunit-9.5.4.phar  \
         && mv phpunit-9.5.4.phar /usr/local/bin/phpunit
@@ -46,5 +49,6 @@ RUN phpdismod xdebug
 RUN npm i -g npm
 RUN pip install --upgrade pip
 RUN pip install --user --upgrade awsebcli awscli cloudflare
-ENV PATH=~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN curl -sSL https://sdk.cloud.google.com | bash
+ENV PATH=~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/google-cloud-sdk/bin
 RUN echo $PATH
