@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM php:8.0-cli
+FROM php:7.4-cli
 RUN apt-get update  \
         && apt-get install -y -qq --no-install-recommends wget gnupg2 apt-transport-https lsb-release ca-certificates software-properties-common  \
         && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
@@ -7,7 +7,7 @@ RUN apt-get update  \
         && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
         && ls -l /etc/apt/* \
         && apt-get update  \
-        && apt-get install -y -qq --no-install-recommends git openssh-client apt-transport-https lsb-release ca-certificates groff jq curl build-essential libzip-dev libcurl4 libcurl4-openssl-dev nodejs software-properties-common php8.0-intl php8.0-gd git php8.0-cli php8.0-curl php8.0-pgsql php8.0-ldap php8.0-sqlite3 php8.0-mysql php8.0-zip php8.0-xml php8.0-mbstring php8.0-dev php8.0-gd php8.0-exif php8.0-readline php8.0-sqlite3 make libmagickcore-6.q16-2-extra unzip php8.0-redis php8.0-imagick php8.0-dev php8.0-bcmath php8.0-mongodb libsystemd-dev python python-pip python-dev python3 python3-pip python3-dev libpng-dev python-setuptools python3-setuptools  \
+        && apt-get install -y -qq --no-install-recommends git openssh-client apt-transport-https lsb-release ca-certificates groff jq curl build-essential nodejs software-properties-common php7.4-intl php7.4-gd php7.4-exif php7.4-json php7.4-readline php7.4-sqlite3 git php7.4-cli php7.4-curl php7.4-pgsql php7.4-ldap php7.4-sqlite3 php7.4-mysql php7.4-zip php7.4-xml php7.4-mbstring php7.4-dev php7.4-gd php7.4-imagick make libmagickcore-6.q16-2-extra unzip php7.4-redis php7.4-imagick php7.4-dev php7.4-bcmath php7.4-mongodb libsystemd-dev python python-pip python-dev python3 python3-pip python3-dev libpng-dev python-setuptools python3-setuptools  \
         && apt-get autoremove -y  \
         && apt-get autoclean  \
         && apt-get clean  \
@@ -27,9 +27,6 @@ RUN docker-php-ext-enable sodium
 RUN docker-php-ext-configure pcntl
 RUN docker-php-ext-install pcntl
 RUN docker-php-ext-enable pcntl
-RUN docker-php-ext-configure zip
-RUN docker-php-ext-install zip
-RUN docker-php-ext-enable zip
 RUN docker-php-ext-configure curl
 RUN docker-php-ext-install curl
 RUN docker-php-ext-enable curl
@@ -42,7 +39,7 @@ RUN cd /tmp/php-ast-master/  \
         && make  \
         && make install  \
         &&rm -rf /tmp/php-ast-master/
-RUN echo "extension=ast.so" >> /etc/php/8.0/cli/conf.d/20-ast.ini
+RUN echo "extension=ast.so" >> /etc/php/7.4/cli/conf.d/20-ast.ini
 RUN cd /tmp  \
         && wget -O php-systemd-src.zip https://github.com/systemd/php-systemd/archive/master.zip  \
         && unzip php-systemd-src.zip  \
@@ -52,7 +49,7 @@ RUN cd /tmp  \
         && make  \
         && make install  \
         && rm -rf /tmp/php-systemd-master  \
-        && echo "extension=systemd.so" >> /etc/php/8.0/mods-available/systemd.ini
+        && echo "extension=systemd.so" >> /etc/php/7.4/mods-available/systemd.ini
 RUN phpenmod zip intl gd systemd exif
 RUN curl -O -L https://phar.phpunit.de/phpunit-9.5.4.phar  \
         && chmod +x phpunit-9.5.4.phar  \
