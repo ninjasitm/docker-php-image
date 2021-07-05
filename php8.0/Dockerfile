@@ -15,24 +15,8 @@ RUN apt-get update  \
         && apt-get update  \
         && apt-get install -y nodejs libsodium-dev \
         && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
-RUN docker-php-ext-configure exif
-RUN docker-php-ext-install exif
-RUN docker-php-ext-enable exif
-RUN docker-php-ext-configure gd
-RUN docker-php-ext-install gd
-RUN docker-php-ext-enable gd
-RUN docker-php-ext-configure sodium
-RUN docker-php-ext-install sodium
-RUN docker-php-ext-enable sodium
-RUN docker-php-ext-configure pcntl
-RUN docker-php-ext-install pcntl
-RUN docker-php-ext-enable pcntl
-RUN docker-php-ext-configure zip
-RUN docker-php-ext-install zip
-RUN docker-php-ext-enable zip
-RUN docker-php-ext-configure curl
-RUN docker-php-ext-install curl
-RUN docker-php-ext-enable curl
+RUN docker-php-ext-install exif gd sodium pcntl curl zip
+RUN docker-php-ext-enable exif gd sodium pcntl curl zip
 RUN cd /tmp/  \
         && wget https://github.com/nikic/php-ast/archive/master.zip  \
         && unzip master.zip
@@ -63,7 +47,7 @@ RUN curl -O -L https://getcomposer.org/composer-stable.phar  \
 RUN phpdismod xdebug
 RUN npm i -g npm
 RUN pip install --upgrade pip
-RUN pip install --user --upgrade awsebcli awscli cloudflare
+RUN pip install --user --upgrade awsebcli==3.19.4 awscli cloudflare
 RUN curl -sSL https://sdk.cloud.google.com | bash
 ENV PATH=~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/google-cloud-sdk/bin
 RUN echo $PATH
